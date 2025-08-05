@@ -3,11 +3,15 @@ package com.WebdriverDemo3;
 import java.time.Duration;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class HrmScenario_2 {
 	
@@ -62,12 +66,22 @@ public class HrmScenario_2 {
 
         admin_MenuOption.click(); 
         admin_option1.click();
+        
+        WebElement userManagementHeader = driver.findElement(By.xpath("//*[@href='/web/index.php/admin/viewAdminModule']"));
+        Assert.assertTrue(userManagementHeader.isDisplayed(), "Navigation to User Management failed.");
+        System.out.println("------------------------------Assertion Passed for Admin TestCase -------------------------------------- ");
+
 		
 	}
 	public static void searchByUname(String uname) {
 		searchByUname_SearchBox.sendKeys("Admin");
 		searchByUname_searchBtn.click();
+	    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    wait.until(ExpectedConditions.visibilityOfAllElements(resultRows));
 		System.out.println("Search by Username '" + uname + "' found: " + resultRows.size() + " record(s).");
+	    Assert.assertTrue(resultRows.size() > 0, "No results found for username: " + uname);
+        System.out.println("------------------------------Assertion Passed for SearchByUsername TestCase -------------------------------------- ");
+
 		//driver.close();
 
 	}
@@ -77,8 +91,12 @@ public class HrmScenario_2 {
 		searchbyRole_adminOption.click();
 		searchByUname_searchBtn.click();
 		System.out.println("Search by role,records found: " + resultRows.size() + " record(s).");
+		
+	    Assert.assertTrue(resultRows.size() > 0, "No results found for selected user role.");
         resetButton.click();
         System.out.println("Page refreshed");
+        System.out.println("------------------------------Assertion Passed for SearchbyRole TestCase -------------------------------------- ");
+
         
 	}
 	
@@ -89,6 +107,10 @@ public class HrmScenario_2 {
         System.out.println("Search by Status '" + statusText + " found: " + resultRows.size() + " record(s).");
         resetButton.click();
         System.out.println("Page refreshed");
+        Assert.assertTrue(resultRows.size() > 0, "No results found for status: " + statusText);
+        System.out.println("------------------------------Assertion Passed for SearchbyStatus TestCase -------------------------------------- ");
+
+
 
     }
 
