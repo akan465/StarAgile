@@ -40,10 +40,19 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class OrangeHRMLogin {
+	
 	WebDriver driver;
 	Alert alt;
     ChromeOptions options = new ChromeOptions();
+    
+    public OrangeHRMLogin() {
+    }
+    
+    public OrangeHRMLogin(WebDriver driver) {
+		
+		this.driver=driver;
 
+	}
 	
 	File filename;
 	FileInputStream fis;
@@ -65,9 +74,13 @@ public class OrangeHRMLogin {
 		  driver = new ChromeDriver(options);
 		  driver.manage().window().maximize();
 		  driver.navigate().to("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
-		  
-		  filename = new File("D:\\Akanksha-MyWorkspace3\\Hrm.xlsx");
 		  try {
+		  filename = new File("D:\\Akanksha-MyWorkspace3\\Hrm.xlsx");
+		  if (!filename.exists()) {
+	            System.out.println("Excel file does not exist at: " + filename.getAbsolutePath());
+	            return;
+	        }
+		  
 			  
 			fis = new FileInputStream(filename);//bcoz taking input from this file
 			wb = new XSSFWorkbook(fis);
@@ -115,16 +128,12 @@ public class OrangeHRMLogin {
             	
             }  driver.navigate().to("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
             
-            if(!Uname.equals("Admin") && !Pswd.equals("admin123")) {
             	System.out.println("Invalide attempt for :" +Uname+ " : " +Pswd );
-            	
-            } else {
             	
             }
 		}
                 
             
-		}
          
 		public void takeSS(String path) throws IOException, InterruptedException {
 	        File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -147,12 +156,20 @@ public class OrangeHRMLogin {
 		
 	@AfterTest
 	  public void afterTest() throws IOException {
+	    if (wb != null && filename != null) {
 		  FileOutputStream FOS = new FileOutputStream(filename); //to write the result value
 		  wb.write(FOS);
 		  wb.close();
 		  FOS.close();
 		  fis.close();
 		  driver.quit();
+		  
+	    } else {
+	        System.out.println("Workbook or file was not initialized properly.");
+	    }
+	    if (driver != null) {
+	        driver.quit();
+	    }
 		  
 		  
 
